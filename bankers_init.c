@@ -7,6 +7,7 @@
 #define green() (printf("\033[0;32m"))
 #define blue() (printf("\033[0;34m"))
 #define cyan() (printf("\033[0;36m"))
+#define magenta() (printf("\033[0;35m"))
 #define reset() (printf("\033[0m"))
 
 struct Process
@@ -113,7 +114,7 @@ int safety(struct State *S, int r, int p)
     for(int i=0; i<p; i++)
         finish[i]=0;
 
-    printf("work: [");
+    printf("\nwork: [");
     for(int i=0; i<r; i++)
     {
         work[i] = S->R[i].avail;
@@ -138,7 +139,7 @@ int safety(struct State *S, int r, int p)
                         break;
                     }
                 }
-            }///////////////////    
+            }  
             if(flag2 == 1)
             {
                 flag1 = 1;
@@ -147,17 +148,23 @@ int safety(struct State *S, int r, int p)
             else if(finish[i]==0)
             {
                 finish[i] = 1;
-                printf("After P%d, work: [",S->P[i].p_id);
+                printf("After\033[0;32m P%d\033[0m, work: [\033[0;35m",S->P[i].p_id);
                 for(int k=0; k<r; k++)
                 {
                     work[k] += S->P[i].alloc[k];
                     printf(" %d ",work[k]);
                 }
-                printf("]");
-                printf("\tfinish: [");
+                printf("\033[0m]");
+                printf("\tfinish: [\033[0;33m");
                 for(int k=0; k<p; k++)
+                {
+                    if(k==i)
+                        blue();
                     printf(" %d ",finish[k]);
-                printf("]\n");
+                    if(k==i)
+                        yellow();
+                }
+                printf("\033[0m]\n");
                 seq[s] = S->P[i].p_id;
                 s++; 
             }
@@ -195,7 +202,25 @@ int main()
     const int no_resource = rnd(2,3);
 
     init_state(&current,no_resource,no_process);
-    //print_state(&current,no_resource,no_process);
     safety(&current,no_resource,no_process);
+
+    char ch, fl;
+    while(1)
+    {
+        green();
+        printf("\nRequest Resource? (y/n): ");
+        reset();
+        scanf("%c",&ch);
+        scanf("%c",&fl);
+        if(ch=='y')
+        {
+
+        }
+        else if(ch=='n')
+        { red(); printf("\nQuit!\n"); return 0; }
+        else
+        { red(); printf("\nInvalid Input!!\n"); reset(); }
+            
+    }
 
 }
