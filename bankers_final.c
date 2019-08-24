@@ -1,16 +1,16 @@
 #include<stdio.h>
 #include <stdlib.h>
 #include<time.h>
-#define rnd(ll,ul) ((rand() % (ul - ll + 1)) + ll)
-#define red() (printf("\033[0;31m"))
-#define yellow() (printf("\033[0;33m"))
-#define green() (printf("\033[0;32m"))
-#define blue() (printf("\033[0;34m"))
-#define cyan() (printf("\033[0;36m"))
-#define magenta() (printf("\033[0;35m"))
-#define reset() (printf("\033[0m"))
+#define rnd(ll,ul) ((rand() % (ul - ll + 1)) + ll)          // function to generate a random number between ll and ul
+#define red() (printf("\033[0;31m"))                        //  
+#define yellow() (printf("\033[0;33m"))                     //
+#define green() (printf("\033[0;32m"))                      //
+#define blue() (printf("\033[0;34m"))                       //      For Color output in terminal
+#define cyan() (printf("\033[0;36m"))                       //
+#define magenta() (printf("\033[0;35m"))                    //
+#define reset() (printf("\033[0m"))                         //
 
-struct Process
+struct Process                                              // structure representing a process
 {
      int p_id;
      int alloc[3];
@@ -18,20 +18,20 @@ struct Process
      int max[3];
 };
 
-struct Resource
+struct Resource                                             // structure representing a resource
 {
     int r_id;
     int max;
     int avail;
 };
 
-struct State
+struct State                                                // structure represneting current state
 {
     struct Process P[7];
     struct Resource R[3];
 }current, previous;
 
-void print_state(struct State *current, int no_resource, int no_process)
+void print_state(struct State *current, int no_resource, int no_process)            // function to print a state
 {
     printf("\n\n\033[0;32mProcess\t\t\033[0;34m Allocation\t\033[0;31m   Max\t\t\033[0;33m  Need\n");
 
@@ -65,7 +65,7 @@ void print_state(struct State *current, int no_resource, int no_process)
     }
 }
 
-void init_state(struct State *current, int no_resource, int no_process)
+void init_state(struct State *current, int no_resource, int no_process)             // function to initialize the state at start of program
 {
     red();
     printf("\nNo of Resources = %d",no_resource);
@@ -107,17 +107,17 @@ void init_state(struct State *current, int no_resource, int no_process)
 }
 
 
-int safety(struct State *S, int r, int p)
+int safety(struct State *S, int r, int p)                      // function implementing the safety algorithm
 {
     int finish[p], seq[p], work[r], s=0;
     
     for(int i=0; i<p; i++)
-        finish[i]=0;
+        finish[i]=0;                                          // initialize finish[] 0==False 1==True
 
     printf("\nwork: [");
     for(int i=0; i<r; i++)
     {
-        work[i] = S->R[i].avail;
+        work[i] = S->R[i].avail;                             // to initialize work[]
         printf(" %d ",work[i]);
     }
     printf("]\n");
@@ -134,7 +134,7 @@ int safety(struct State *S, int r, int p)
                 
                 for(int j=0; j<r; j++)
                 {
-                    if(S->P[i].need[j]>work[j])
+                    if(S->P[i].need[j]>work[j])                                                  // check need[i] <= work
                     {
                         flag2 = 1;
                         break;
@@ -148,11 +148,11 @@ int safety(struct State *S, int r, int p)
             }
             else if(finish[i]==0)
             {
-                finish[i] = 1;
+                finish[i] = 1;                                                               // set finish[i] = True
                 printf("After\033[0;32m P%d\033[0m, work: [\033[0;35m",S->P[i].p_id);
                 for(int k=0; k<r; k++)
                 {
-                    work[k] += S->P[i].alloc[k];
+                    work[k] += S->P[i].alloc[k];                                            // work += allocation[i]
                     printf(" %d ",work[k]);
                 }
                 printf("\033[0m]");
@@ -199,7 +199,7 @@ int safety(struct State *S, int r, int p)
     return 1;
 }
 
-void request(struct State *C, struct State *P, int r, int p)
+void request(struct State *C, struct State *P, int r, int p)                                       // function to implement resource request
 {
     *P = *C;
     int pid, req[r];
@@ -212,34 +212,34 @@ void request(struct State *C, struct State *P, int r, int p)
     if(pid<=0 || pid>p)
     { red(); printf("\nInvalid process id!\n"); reset(); return; }
     blue();
-    printf("\nEnter the request for \033[0;32mP%d\033[0m: ",pid);
+    printf("\nEnter the request for \033[0;32mP%d:\033[0m ",pid);
     red();
     for(int i=0; i<r; i++)
         scanf("%d",&req[i]);
     reset();
-    pid--;                                                                      //To convert to absolute indexing
+    pid--;                                                                                            // To convert to absolute indexing
 
     for(int j=0; j<r; j++)
     {
-        if(req[j]>C->P[pid].need[j])
-        { red(); printf("\nrequest > need, Allocation not possible\n"); return; }
+        if(req[j]>C->P[pid].need[j])                                                                   // check request <= need[i]
+        { red(); printf("\nrequest > need, Allocation not possible\n"); return; }               
 
-        if(req[j]>C->R[j].avail)
+        if(req[j]>C->R[j].avail)                                                                      // check request <= available
         { red(); printf("\nrequest > resource available, Allocation not possible\n"); return; }
     }
 
     for(int j=0; j<r; j++)
     {
-        C->R[j].avail -= req[j];
-        C->P[pid].alloc[j] += req[j];
-        C->P[pid].need[j] -= req[j];
+        C->R[j].avail -= req[j];                                                                     // available -= request
+        C->P[pid].alloc[j] += req[j];                                                                // allocation[i] += request
+        C->P[pid].need[j] -= req[j];                                                                 // need[i] += request
     }
 
     blue(); printf("\nNew State"); reset();
     print_state(C,r,p);
 
     blue(); printf("\nChecking Safety algorithm for the request\n"); reset();
-    int s = safety(C,r,p);
+    int s = safety(C,r,p);                                                                           // check safety algorithm
 
     if(s == 0)
     {
@@ -256,7 +256,7 @@ void request(struct State *C, struct State *P, int r, int p)
 
 }
 
-int main()
+int main()                                                  // main function
 {
     srand(time(0));
     const int no_process = rnd(3,7);
