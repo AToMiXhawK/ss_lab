@@ -114,12 +114,14 @@ int safety(struct State *S, int r, int p)                      // function imple
     for(int i=0; i<p; i++)
         finish[i]=0;                                          // initialize finish[] 0==False 1==True
 
-    printf("\nwork: [");
+    printf("\navail = work: [");
+    magenta();
     for(int i=0; i<r; i++)
     {
         work[i] = S->R[i].avail;                             // to initialize work[]
         printf(" %d ",work[i]);
     }
+    reset();
     printf("]\n");
     
     int l = 0;
