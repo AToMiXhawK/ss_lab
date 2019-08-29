@@ -39,13 +39,37 @@ void init_root(struct node *root)
 	root->child_count=0;
 }
 
+void fetchloc(struct node *N)
+{
+	struct node *t = N;
+    char *tree[20]; int i=0;
+	while(1)
+	{
+        if(t->type == "d")
+            tree[i] = t->dir.dirname;
+        else
+            tree[i] - t->file.filename;
+        t = t->parent;
+        if(t==NULL) { break; }
+        i++;
+		
+	}
+    for(int j=i-1;j>=0;j--)
+		printf("/%s",tree[j]);
+    
+    if(i==0)
+        printf("root");
+}
+
 void fetchppt(struct node *N)
 {
 	if(N->type=="d")
 	{
 		printf("Node type: Directory\n");
 		printf("Directory name: %s\n",N->dir.dirname);
-		printf("Permissions: %s\n",N->dir.pem);
+        printf("Location: ");
+        fetchloc(N);
+		printf("\nPermissions: %s\n",N->dir.pem);
 		printf("Created on: %s\n",asctime(N->ptm));
 	}
 	else
@@ -56,6 +80,8 @@ void fetchppt(struct node *N)
 
 void create_subdir(struct node *Parent)
 {
+    if(Parent->type!="d")
+    { printf("Parent not a directory\n"); return; }
 	struct node *new = (struct node*) malloc(sizeof(struct node*)) ;
 	new->parent = Parent;
 	new->type = "d";
@@ -76,4 +102,6 @@ int main()
 	fetchppt(pwd);
 	create_subdir(pwd);
 	fetchppt(pwd->childs[0]);
+    create_subdir(pwd->childs[0]);
+    fetchppt(pwd->childs[0]->childs[0]);
 }
