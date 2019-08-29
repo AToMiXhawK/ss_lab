@@ -65,7 +65,7 @@ void scan(int *seek, int n, int head, int max, char ch)
     {
         if(p==0) {ch='r';}
         else if(p>=n) {ch='l';}
-        else if(seek[p]-seek[p-1] < seek[p+1]-seek[p])
+        else if(head-seek[p-1] < seek[p]-head)
             ch = 'l';
         else
             ch = 'r';
@@ -77,6 +77,7 @@ void scan(int *seek, int n, int head, int max, char ch)
         i = 0;
         for(int j=p-1; j>=0; j--)
         {   seek_scan[i] = seek[j]; i++;   }
+        if(p==n) { n--; goto print_scan; }
         seek_scan[i] = 0; i++;
         for(int j=p; j<n; j++)
         {   seek_scan[i] = seek[j]; i++;  }
@@ -86,12 +87,13 @@ void scan(int *seek, int n, int head, int max, char ch)
         i = 0;
         for(int j=p; j<n; j++)
         {   seek_scan[i] = seek[j]; i++;   }
+        if(p==0) { n--; goto print_scan; }
         seek_scan[i] = max; i++;
         for(int j=p-1; j>=0; j--)
         {   seek_scan[i] = seek[j]; i++;  }
     }
 
-
+print_scan:
     printf("\nScheduling: ");
     for(int i=0;i<n+1;i++)
         printf("%d ", seek_scan[i]);
@@ -121,6 +123,7 @@ void cscan(int *seek, int n, int head, int max, char ch)
         i = 0;
         for(int j=p-1; j>=0; j--)
         {   seek_scan[i] = seek[j]; i++;   }
+        if(p==n) { n-=2; goto print_cscan; }
         seek_scan[i] = 0; i++;
         seek_scan[i] = max; i++;
         for(int j=n; j>=p; j--)
@@ -131,13 +134,14 @@ void cscan(int *seek, int n, int head, int max, char ch)
         i = 0;
         for(int j=p; j<n; j++)
         {   seek_scan[i] = seek[j]; i++;   }
+        if(p==0) { n-=2; goto print_cscan; }
         seek_scan[i] = max; i++;
         seek_scan[i] = 0; i++;
         for(int j=0; j<p; j++)
         {   seek_scan[i] = seek[j]; i++;  }
     }
 
-
+print_cscan:
     printf("\nScheduling: ");
     for(int i=0;i<n+2;i++)
         printf("%d ", seek_scan[i]);
