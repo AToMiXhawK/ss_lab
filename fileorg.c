@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <time.h>
 
 time_t rawtime;
@@ -22,16 +23,21 @@ struct node
   struct directory dir;
   struct file file;
   struct tm *ptm;
-  struct Node *next[];
+  struct Node *childs;
+  int child_count;
+  struct Node *parent;
 }root;
 
 void init_root(struct node *root)
 {
     root->type = "d";
     root->dir.dirname = "/";
-    root->dir.pem= "r--";
+    root->dir.pem= "rw-";
     time_t rawtime = time(NULL);
     root->ptm = localtime(&rawtime);
+    root->parent=NULL;
+    root->childs=NULL;
+    root->child_count=0;
 }
 
 void fetchppt(struct node *N)
@@ -49,8 +55,15 @@ void fetchppt(struct node *N)
     }
 }
 
+void create_subdir(struct node *Parent)
+{
+    struct node *new = (struct node*) malloc(sizeof(struct node*)) ;
+}
+
 int main()
 {
+    struct node *pwd = (struct node*) malloc(sizeof(struct node*)) ;
     init_root(&root);
-    fetchppt(&root);
+    pwd = &root;
+    fetchppt(pwd);
 }
