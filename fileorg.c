@@ -23,9 +23,9 @@ struct node
   struct directory dir;
   struct file file;
   struct tm *ptm;
-  struct node *childs;
   int child_count;
   struct node *parent;
+  struct node *childs[];
 }root;
 
 void init_root(struct node *root)
@@ -36,7 +36,6 @@ void init_root(struct node *root)
     time_t rawtime = time(NULL);
     root->ptm = localtime(&rawtime);
     root->parent=NULL;
-    root->childs=NULL;
     root->child_count=0;
 }
 
@@ -60,13 +59,13 @@ void create_subdir(struct node *Parent)
     struct node *new = (struct node*) malloc(sizeof(struct node*)) ;
     new->parent = Parent;
     new->type = "d";
-    new->dir.dirname = "New Folder";
+		printf("Enter the name for new directory: ");
+		scanf("%s",new->dir.dirname);
     new->dir.pem= "rw-";
     time_t rawtime = time(NULL);
     new->ptm = localtime(&rawtime);
-    new->childs=NULL;
     new->child_count=0;
-    Parent->childs = new;
+    Parent->childs[Parent->child_count++] = new;
 }
 
 int main()
@@ -76,5 +75,5 @@ int main()
     pwd = &root;
     fetchppt(pwd);
     create_subdir(pwd);
-    fetchppt(pwd->childs);
+    fetchppt(pwd->childs[0]);
 }
