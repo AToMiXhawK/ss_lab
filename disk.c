@@ -59,8 +59,6 @@ void scan(int *seek, int n, int head, int max, char ch)
         if(head<seek[p])
             break;
 
-    //printf("\nP = %d \n",p);
-
     if(ch=='?')
     {
         if(p==0) {ch='r';}
