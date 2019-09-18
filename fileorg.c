@@ -1,8 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-
-time_t rawtime;
+#include <string.h>
+#define red() (printf("\033[0;31m"))                        //  
+#define yellow() (printf("\033[0;33m"))                     //
+#define green() (printf("\033[0;32m"))                      //
+#define blue() (printf("\033[0;34m"))                       //      For Color output in terminal
+#define cyan() (printf("\033[0;36m"))                       //
+#define magenta() (printf("\033[0;35m"))                    //
+#define reset() (printf("\033[0m"))     
+//#include "hawk.h"
 
 struct directory
 {
@@ -58,7 +65,7 @@ void fetchloc(struct node *N)
 		printf("/%s",tree[j]);
     
     if(i==0)
-        printf("root");
+        printf("/");
 }
 
 void fetchppt(struct node *N)
@@ -70,7 +77,8 @@ void fetchppt(struct node *N)
         printf("Location: ");
         fetchloc(N);
 		printf("\nPermissions: %s\n",N->dir.pem);
-		printf("Created on: %s\n",asctime(N->ptm));
+		printf("Created on: %s",asctime(N->ptm));
+		printf("No of Childs: %d",N->child_count);
 	}
 	else
 	{
@@ -78,20 +86,39 @@ void fetchppt(struct node *N)
 	}
 }
 
-void create_subdir(struct node *Parent)
+void mkdir(struct node *Parent)
 {
     if(Parent->type!="d")
     { printf("Parent not a directory\n"); return; }
 	struct node *new = (struct node*) malloc(sizeof(struct node*)) ;
 	new->parent = Parent;
 	new->type = "d";
+	char name[20];
 	printf("Enter the name for new directory: ");
-	scanf("%s",new->dir.dirname);
-	new->dir.pem= "rw-";
+	scanf("%s",name);
+	strcpy(new->dir.dirname,name);
 	time_t rawtime = time(NULL);
 	new->ptm = localtime(&rawtime);
 	new->child_count=0;
 	Parent->childs[Parent->child_count++] = new;
+	printf("New directory created: %s\n",new->dir.dirname);
+}
+
+void ls(struct node *pwd)
+{
+	if(pwd->type!="d")
+    { red(); printf("Parent not a directory"); reset(); return; }
+	if(pwd->child_count == 0)
+	{ red(); printf("Empty directory"); reset(); return; }
+
+	for(int i=0; i<pwd->child_count; i++)
+	{
+		if(pwd->childs[i]->type == "d")
+		{ green(); printf("%s\t",pwd->childs[i]->dir.dirname); reset(); }
+
+		else
+		{ printf("%s\t",pwd->childs[i]->file.filename); }
+	}
 }
 
 int main()
@@ -99,9 +126,30 @@ int main()
 	struct node *pwd = (struct node*) malloc(sizeof(struct node*)) ;
 	init_root(&root);
 	pwd = &root;
+	printf("Root Directory Initialized\n");
 	fetchppt(pwd);
-	create_subdir(pwd);
-	fetchppt(pwd->childs[0]);
-    create_subdir(pwd->childs[0]);
-    fetchppt(pwd->childs[0]->childs[0]);
+	char ch, *cmd;
+    while(1)
+    {
+        blue();
+        printf("\n> ");
+		reset();
+        scanf("%s",cmd);
+		if(strcmp(cmd,"ls") == 0)	
+			ls(pwd);
+		else if(strcmp(cmd,"mkdir") == 0)
+			mkdir(pwd);
+		else if(strcmp(cmd,"pwd") == 0)
+			fetchloc(pwd);
+		else if(strcmp(cmd,"info") == 0)
+			fetchppt(pwd);
+		else if(strcmp(cmd,"quit") == 0)
+			break;
+		else if(strcmp(cmd,"exit") == 0)
+			break;
+		else
+			printf("Invalid Command\n");
+		scanf("%c",&ch);
+		printf("\n");	
+	}
 }
