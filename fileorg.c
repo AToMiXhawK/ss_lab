@@ -85,6 +85,7 @@ void fetchppt(struct node *pwd)
 	{
 		printf("Node type: File %c\n",*N->type);
 	}
+	printf("\n");
 }
 
 struct node* mkdir(struct node *Parent)
@@ -104,7 +105,7 @@ struct node* mkdir(struct node *Parent)
 	new->child_count=0;
 	Parent->childs[Parent->child_count] = new;
     Parent->child_count++;
-	printf("New directory created: %s\n",new->name);
+	//printf("New directory created: %s",new->name);
     return new;
 }
 
@@ -124,7 +125,14 @@ void rmdir(struct node *pwd)
         if(strcmp(name,pwd->childs[i]->name) == 0)
         {
 		    if(pwd->childs[i]->type == "d")
-                { free(pwd->childs[i]); pwd->childs[i] = NULL; pwd->child_count--; return; }
+                { 
+					for(int j=i; j<pwd->child_count; j++)
+						pwd->childs[j] = pwd->childs[j+1];
+					pwd->child_count--;
+					free(pwd->childs[pwd->child_count]); 
+					pwd->childs[pwd->child_count] = NULL;
+					return; 
+				}
 
 		    else
 		    { printf("%s not a Directory",name); return; }
@@ -138,9 +146,9 @@ void rmdir(struct node *pwd)
 void ls(struct node *pwd)
 {
 	if(pwd->type!="d")
-    { red(); printf("Parent not a directory"); reset(); return; }
+    { red(); printf("Parent not a directory\n"); reset(); return; }
 	if(pwd->child_count == 0)
-	{ red(); printf("Empty directory"); reset(); return; }
+	{ red(); printf("Empty directory\n"); reset(); return; }
 
 	for(int i=0; i<pwd->child_count; i++)
 	{
@@ -150,6 +158,7 @@ void ls(struct node *pwd)
 		else
 		{ printf("%s\t",pwd->childs[i]->name); }
 	}
+	printf("\n");
 }
 
 struct node* cd(struct node *pwd, struct node *rt)
@@ -237,7 +246,23 @@ void tree(struct node *pwd)
     { printf("%s not found",name); return; }
 
     print_tree(N);
+	printf("\n");
+}
 
+void help()
+{
+	green(); printf("File Organization implementation\n\n");
+	blue(); printf("Available Commands:");
+	cyan(); printf("\npwd: "); reset(); printf("\tTo print location of present working directory");
+	cyan(); printf("\nls: "); reset(); printf("\tTo print contents of pwd");
+	cyan(); printf("\ninfo: "); reset(); printf("\tTo print properties of given node"); red(); printf("\t\tUsage: "); cyan(); printf("info <nodename>");
+	cyan(); printf("\ntree: "); reset(); printf("\tTo print tree structure of given node"); red(); printf("\t\tUsage: "); cyan(); printf("tree <nodename>");
+	cyan(); printf("\nmkdir: "); reset(); printf("\tTo create new directory in pwd"); red(); printf("\t\t\tUsage: "); cyan(); printf("mkdir <dirname>");
+	cyan(); printf("\nrmdir: "); reset(); printf("\tTo remove directory in pwd"); red(); printf("\t\t\tUsage: "); cyan(); printf("rmdir <dirname>");
+	cyan(); printf("\nchmod: "); reset(); printf("\tTo change permissions of a node in pwd"); red(); printf("\t\tUsage: "); cyan(); printf("chmod <nodename> <pem>");
+	cyan(); printf("\nquit: "); reset(); printf("\tQuit the program");
+	blue(); printf("\n\nNote: "); reset(); printf("use \'.\' to pass pwd as nodename argument");
+	printf("\n");
 }
 
 int main()
@@ -272,6 +297,8 @@ int main()
 			pwd = cd(pwd,rt);
         else if(strcmp(cmd,"tree") == 0)
             tree(pwd);
+		else if(strcmp(cmd,"help") == 0)
+            help();
 		else if(strcmp(cmd,"quit") == 0)
 			break;
 		else if(strcmp(cmd,"exit") == 0)
@@ -279,6 +306,6 @@ int main()
 		else
 			printf("Invalid Command\n");
 		scanf("%c",&ch);
-		printf("\n");	
+		//printf("\n");	
 	}
 }
