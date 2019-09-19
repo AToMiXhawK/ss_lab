@@ -201,6 +201,45 @@ void chmod(struct node *pwd)
 
 }
 
+int count=0;
+void print_tree(struct node *N)
+{
+    char *s="|-----",*s1="|     ";
+    printf("\n");
+	for(int j=0;j<(count-1);j++)
+		printf("%s",s1);
+	if(count>0)
+		printf("%s",s);
+    printf("%s",N->name);
+    for(int i=0; i<N->child_count; i++)
+    {
+       count++;
+        print_tree(N->childs[i]);
+       count--;
+    }	
+}
+
+void tree(struct node *pwd)
+{
+    struct node* N = (struct node*) malloc(sizeof(struct node)) ;
+    int f=0;
+    char name[32];
+	scanf("%s",name);
+
+    if(strcmp(name,".") == 0)
+    { N = pwd; f=1; }
+
+    for(int i=0; i<pwd->child_count; i++)
+        if(strcmp(name,pwd->childs[i]->name) == 0)
+		    { N = pwd->childs[i]; f=1;  break; }
+
+    if(f==0)
+    { printf("%s not found",name); return; }
+
+    print_tree(N);
+
+}
+
 int main()
 {
     struct node* rt = (struct node*) malloc(sizeof(struct node)) ;
@@ -231,6 +270,8 @@ int main()
 			chmod(pwd);
         else if(strcmp(cmd,"cd") == 0)
 			pwd = cd(pwd,rt);
+        else if(strcmp(cmd,"tree") == 0)
+            tree(pwd);
 		else if(strcmp(cmd,"quit") == 0)
 			break;
 		else if(strcmp(cmd,"exit") == 0)
