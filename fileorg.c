@@ -79,8 +79,8 @@ struct node* mkdir(struct node *Parent)
 	struct node* new = (struct node*) malloc(sizeof(struct node)) ;
 	new->parent = Parent;
 	new->type = "d";
-	char name[20];
-	printf("Enter the name for new directory: ");
+	char name[32];
+	//printf("Enter the name for new directory: ");
 	scanf("%s",name);
 	strcpy(new->name,name);
     new->pem = Parent->pem;
@@ -91,6 +91,33 @@ struct node* mkdir(struct node *Parent)
     Parent->child_count++;
 	printf("New directory created: %s\n",new->name);
     return new;
+}
+
+void rmdir(struct node *pwd)
+{
+    if(pwd->type!="d")
+    { red(); printf("Parent not a directory"); reset(); return; }
+	if(pwd->child_count == 0)
+	{ red(); printf("Empty directory"); reset(); return; }
+
+    char name[32];
+	//printf("Enter the name of directory: ");
+	scanf("%s",name);
+
+    for(int i=0; i<pwd->child_count; i++)
+	{
+        if(strcmp(name,pwd->childs[i]->name) == 0)
+        {
+		    if(pwd->childs[i]->type == "d")
+                { free(pwd->childs[i]); pwd->childs[i] = NULL; pwd->child_count--; return; }
+
+		    else
+		    { printf("%s not a Directory",name); return; }
+        }
+	}
+
+    printf("%s not found",name);
+    return;
 }
 
 void ls(struct node *pwd)
@@ -108,6 +135,36 @@ void ls(struct node *pwd)
 		else
 		{ printf("%s\t",pwd->childs[i]->name); }
 	}
+}
+
+struct node* cd(struct node *pwd)
+{
+    if(pwd->type!="d")
+    { red(); printf("Parent not a directory"); reset(); return pwd; }
+	if(pwd->child_count == 0)
+	{ red(); printf("Empty directory"); reset(); return pwd; }
+
+    char name[32];
+	//printf("Enter the name of directory: ");
+	scanf("%s",name);
+
+    if(strcmp(name,"..") == 0)
+        return pwd->parent;
+
+	for(int i=0; i<pwd->child_count; i++)
+	{
+        if(strcmp(name,pwd->childs[i]->name) == 0)
+        {
+		    if(pwd->childs[i]->type == "d")
+                return pwd->childs[i];
+
+		    else
+		    { printf("%s not a Directory",name); return pwd; }
+        }
+	}
+
+    printf("%s not found",name);
+    return NULL;
 }
 
 int main()
@@ -128,10 +185,14 @@ int main()
 			ls(pwd);
 		else if(strcmp(cmd,"mkdir") == 0)
 			mkdir(pwd);
+        else if(strcmp(cmd,"rmdir") == 0)
+			rmdir(pwd);
 		else if(strcmp(cmd,"pwd") == 0)
 			fetchloc(pwd);
 		else if(strcmp(cmd,"info") == 0)
 			fetchppt(pwd);
+        else if(strcmp(cmd,"cd") == 0)
+			pwd = cd(pwd);
 		else if(strcmp(cmd,"quit") == 0)
 			break;
 		else if(strcmp(cmd,"exit") == 0)
