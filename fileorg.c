@@ -14,7 +14,7 @@ struct node
 {
     char *type;
     char name[32];
-    char *pem;
+    char pem[3];
     struct tm *ptm;
 	int child_count;
 	struct node *parent;
@@ -25,7 +25,7 @@ void init_root(struct node *root)
 {
 	root->type = "d";
 	strcpy(root->name,"/");
-	root->pem= "rw-";
+	strcpy(root->pem,"rw-");
 	time_t rawtime = time(NULL);
 	root->ptm = localtime(&rawtime);
 	root->parent=NULL;
@@ -54,8 +54,23 @@ void fetchloc(struct node *N)
         printf("/");
 }
 
-void fetchppt(struct node *N)
+void fetchppt(struct node *pwd)
 {
+    struct node* N = (struct node*) malloc(sizeof(struct node)) ;
+    int f=0;
+    char name[32];
+	scanf("%s",name);
+
+    if(strcmp(name,".") == 0)
+    { N = pwd; f=1; }
+
+    for(int i=0; i<pwd->child_count; i++)
+        if(strcmp(name,pwd->childs[i]->name) == 0)
+		    { N = pwd->childs[i]; f=1;  break; }
+
+    if(f==0)
+    { printf("%s not found",name); return; }
+
 	if(N->type=="d")
 	{
 		printf("Node type: Directory\n");
@@ -83,7 +98,7 @@ struct node* mkdir(struct node *Parent)
 	//printf("Enter the name for new directory: ");
 	scanf("%s",name);
 	strcpy(new->name,name);
-    new->pem = Parent->pem;
+    strcpy(new->pem,Parent->pem);
 	time_t rawtime = time(NULL);
 	new->ptm = localtime(&rawtime);
 	new->child_count=0;
@@ -137,12 +152,10 @@ void ls(struct node *pwd)
 	}
 }
 
-struct node* cd(struct node *pwd)
+struct node* cd(struct node *pwd, struct node *rt)
 {
     if(pwd->type!="d")
     { red(); printf("Parent not a directory"); reset(); return pwd; }
-	if(pwd->child_count == 0)
-	{ red(); printf("Empty directory"); reset(); return pwd; }
 
     char name[32];
 	//printf("Enter the name of directory: ");
@@ -150,6 +163,9 @@ struct node* cd(struct node *pwd)
 
     if(strcmp(name,"..") == 0)
         return pwd->parent;
+
+    if(strcmp(name,"/") == 0)
+        return rt;
 
 	for(int i=0; i<pwd->child_count; i++)
 	{
@@ -167,13 +183,33 @@ struct node* cd(struct node *pwd)
     return NULL;
 }
 
+void chmod(struct node *pwd)
+{
+    char name[32], pem[3];
+	scanf("%s",name);
+    scanf("%s",pem);
+
+    if(strcmp(name,".") == 0)
+    { strcpy(pwd->pem,pem); return; }
+
+    for(int i=0; i<pwd->child_count; i++)
+        if(strcmp(name,pwd->childs[i]->name) == 0)
+		    { strcpy(pwd->childs[i]->pem,pem); return; }
+
+    printf("%s not found",name);
+    return;
+
+}
+
 int main()
 {
+    struct node* rt = (struct node*) malloc(sizeof(struct node)) ;
 	struct node* pwd = (struct node*) malloc(sizeof(struct node)) ;
 	init_root(&root);
-	pwd = &root;
+	rt = &root;
+    pwd = rt;
 	printf("Root Directory Initialized\n");
-	fetchppt(pwd);
+	//fetchppt(pwd);
 	char ch, *cmd;
     while(1)
     {
@@ -191,8 +227,10 @@ int main()
 			fetchloc(pwd);
 		else if(strcmp(cmd,"info") == 0)
 			fetchppt(pwd);
+        else if(strcmp(cmd,"chmod") == 0)
+			chmod(pwd);
         else if(strcmp(cmd,"cd") == 0)
-			pwd = cd(pwd);
+			pwd = cd(pwd,rt);
 		else if(strcmp(cmd,"quit") == 0)
 			break;
 		else if(strcmp(cmd,"exit") == 0)
