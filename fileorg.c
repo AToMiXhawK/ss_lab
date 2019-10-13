@@ -13,6 +13,7 @@
 struct node
 {
 	char *type;
+	char *data;
 	char name[32];
 	char pem[3];
 	struct tm *ptm;
@@ -30,6 +31,7 @@ void init_root(struct node *root)
 	root->ptm = localtime(&rawtime);
 	root->parent=NULL;
 	root->child_count=0;
+    root->data=NULL;
 }
 
 void fetchloc(struct node *N)
@@ -91,20 +93,26 @@ struct node* mkdir(struct node *Parent)
 {
 	if(Parent->type!="d")
 	{ printf("Parent not a directory\n"); return NULL; }
-	struct node* new = (struct node*) malloc(sizeof(struct node)) ;
-	new->parent = Parent;
-	new->type = "d";
 	char name[32];
 	//printf("Enter the name for new directory: ");
 	scanf("%s",name);
+	for(int i=0; i<Parent->child_count; i++)
+		if(strcmp(name,Parent->childs[i]->name) == 0)
+			if(Parent->childs[i]->type == "d")
+			{ printf("%s: Directory already exixts!\n",name); return NULL; }
+	
+	struct node* new = (struct node*) malloc(sizeof(struct node)) ;
 	strcpy(new->name,name);
 	strcpy(new->pem,Parent->pem);
+	new->parent = Parent;
+	new->type = "d";
 	time_t rawtime = time(NULL);
 	new->ptm = localtime(&rawtime);
 	new->child_count=0;
 	Parent->childs[Parent->child_count] = new;
 	Parent->child_count++;
 	//printf("New directory created: %s",new->name);
+	new->data = NULL;
 	return new;
 }
 
@@ -249,6 +257,50 @@ void tree(struct node *pwd)
 	printf("\n");
 }
 
+struct node* touch(struct node *Parent)
+{
+	if(Parent->type!="d")
+	{ printf("Parent not a directory\n"); return NULL; }
+	char name[32], data[128];
+	scanf("%s",name);
+	for(int i=0; i<Parent->child_count; i++)
+		if(strcmp(name,Parent->childs[i]->name) == 0)
+			if(Parent->childs[i]->type == "f")
+			{ printf("%s: File already exixts!\n",name); return NULL; }
+	
+	struct node* new = (struct node*) malloc(sizeof(struct node)) ;
+	new->parent = Parent;
+	new->type = "f";
+	strcpy(new->name,name);
+	//scanf("%s",data);
+	fgets(data, 32, stdin);
+	strcpy(new->data,data);
+	strcpy(new->pem,Parent->pem);
+	time_t rawtime = time(NULL);
+	new->ptm = localtime(&rawtime);
+	new->child_count=0;
+	Parent->childs[Parent->child_count] = new;
+	Parent->child_count++;
+	printf("New file created %s, %s",new->name,new->data);
+	return new;
+}
+
+void cat(struct node *pwd)
+{
+	char name[32];
+	scanf("%s",name);
+
+	if(strcmp(name,".") == 0)
+	{ printf("Invalid filename"); return; }
+
+	for(int i=0; i<pwd->child_count; i++)
+		if(strcmp(name,pwd->childs[i]->name) == 0)
+			{ printf("%s",pwd->childs[i]->data); return; }
+
+	printf("%s not found",name);
+	return;
+}
+
 void help()
 {
 	green(); printf("File Organization implementation\n\n");
@@ -287,6 +339,10 @@ int main()
 			mkdir(pwd);
 		else if(strcmp(cmd,"rmdir") == 0)
 			rmdir(pwd);
+		else if(strcmp(cmd,"touch") == 0)
+			touch(pwd);
+		else if(strcmp(cmd,"cat") == 0)
+			cat(pwd);
 		else if(strcmp(cmd,"pwd") == 0)
 			fetchloc(pwd);
 		else if(strcmp(cmd,"info") == 0)
