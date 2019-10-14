@@ -281,7 +281,7 @@ struct node* touch(struct node *Parent)
 	new->child_count=0;
 	Parent->childs[Parent->child_count] = new;
 	Parent->child_count++;
-	printf("New file created %s, %s",new->name,new->data);
+	//printf("New file created %s, %s",new->name,new->data);
 	return new;
 }
 
@@ -311,7 +311,7 @@ void help()
 	cyan(); printf("\ntree: "); reset(); printf("\tTo print tree structure of given node"); red(); printf("\t\tUsage: "); cyan(); printf("tree <nodename>");
 	cyan(); printf("\nmkdir: "); reset(); printf("\tTo create new directory in pwd"); red(); printf("\t\t\tUsage: "); cyan(); printf("mkdir <dirname>");
 	cyan(); printf("\nrmdir: "); reset(); printf("\tTo remove directory in pwd"); red(); printf("\t\t\tUsage: "); cyan(); printf("rmdir <dirname>");
-	cyan(); printf("\ntouch: "); reset(); printf("\tTo create new file in pwd"); red(); printf("\t\t\tUsage: "); cyan(); printf("touch <filename> <enter> <data>");
+	cyan(); printf("\ntouch: "); reset(); printf("\tTo create new file in pwd"); red(); printf("\t\t\tUsage: "); cyan(); printf("touch <filename> <data>");
 	cyan(); printf("\ncat: "); reset(); printf("\tTo print data in a file"); red(); printf("\t\t\t\tUsage: "); cyan(); printf("cat <filename>");
 	cyan(); printf("\nchmod: "); reset(); printf("\tTo change permissions of a node in pwd"); red(); printf("\t\tUsage: "); cyan(); printf("chmod <nodename> <pem>");
 	cyan(); printf("\nquit: "); reset(); printf("\tQuit the program");
