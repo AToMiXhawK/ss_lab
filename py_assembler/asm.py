@@ -1,3 +1,9 @@
+#TODO
+#   Extended addressing
+#   indirect addressing
+#   indexed addressing
+#   register operations
+
 import csv
 
 OPTAB = {'START' : ['D'],
