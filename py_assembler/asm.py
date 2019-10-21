@@ -183,14 +183,16 @@ def pass2(SYMTAB,SIZE,START):
                 textrec += text
                 outf.write(textrec+"\n")
                 textrec = "T^"
-                tl = 0
+                textrec += "{:06X}^".format(int(line[0]))
+                text = "^"+INSTR
+                tl = len(INSTR)
             elif(tl==len(INSTR)):
-                textrec += "{:06X}".format(int(line[0]))
+                textrec += "{:06X}^".format(int(line[0]))
                 text += "^"+INSTR
             else:
                 text += "^"+INSTR
                        
-    textrec += "^{:02X}".format(tl)
+    textrec += "{:02X}".format(tl)
     textrec += text
     outf.write(textrec+"\n")
     
