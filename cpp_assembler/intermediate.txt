@@ -1,0 +1,7 @@
+0 PG START 0
+0 - LDA #3
+3 - ADD #7
+6 - STA ANS
+9 - RSUB -
+c ANS RESW 2
+12 END -
