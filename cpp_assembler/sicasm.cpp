@@ -33,9 +33,9 @@ int main()
             { cout<<"\nDuplicate Symbol"<<endl; break; }
         }
 
-        int len;
+        int len=0;
         if(OPTAB[row[1]].exists=='y')
-            len = str2int(OPTAB[row[1]].opcode);
+            len = OPTAB[row[1]].format;
         else if(row[1] == "WORD")
             len = 3;
         else if(row[1] == "RESW")
@@ -49,7 +49,7 @@ int main()
         
         LOCCTR += len;
         
-        cout<<len<<"\t";
+        cout<<LOCCTR-len<<"\t";
         for(int i=0; i<row.size(); i++)
             cout<<row[i]<<"\t";
         cout<<endl;
