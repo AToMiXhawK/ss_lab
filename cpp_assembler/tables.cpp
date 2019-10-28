@@ -18,26 +18,31 @@ struct struct_opcode{
 
 struct struct_literal{
     string value;
-    string address;
+    int address;
+    int size;
+    char type;
     char exists;
     int blockNumber;
+    string blockName;
     struct_literal(){
       value="";
-      address="?";
+      address=0;
+      size = 0;
       blockNumber = 0;
+      blockName = "DEFAULT";
       exists='n';
     }
 };
 
 struct struct_label{
-     string address;
+     int address;
      string name;
      int relative;
      int blockNumber;
      char exists;
      struct_label(){
        name="undefined";
-       address="0";
+       address=0;
        blockNumber = 0;
        exists='n';
        relative = 0;
@@ -45,17 +50,17 @@ struct struct_label{
 };
 
 struct struct_blocks{
-     string startAddress;
+     int startAddress;
      string name;
-     string LOCCTR;
+     int LOCCTR;
      int number;
      char exists;
      struct_blocks(){
        name="undefined";
-       startAddress="?";
+       startAddress= 0;
        exists='n';
        number = -1;
-       LOCCTR = "0";
+       LOCCTR = 0;
      }
 };
 
@@ -350,9 +355,9 @@ void load_OPTAB(){
 void load_BLOCKS(){
   BLOCKS["DEFAULT"].exists = 'y';
   BLOCKS["DEFAULT"].name = "DEFAULT";
-  BLOCKS["DEFAULT"].startAddress = "00000";
+  BLOCKS["DEFAULT"].startAddress = 0;
   BLOCKS["DEFAULT"].number=0;
-  BLOCKS["DEFAULT"].LOCCTR = "0";
+  BLOCKS["DEFAULT"].LOCCTR = 0;
 }
 
 void load_tables(){
