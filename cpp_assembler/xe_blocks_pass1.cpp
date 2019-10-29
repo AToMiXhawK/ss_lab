@@ -89,6 +89,8 @@ void pass1()
         int len=0;
         if(OPTAB[row[1]].exists=='y')
             len = OPTAB[row[1]].format;
+        else if(row[1][0]=='+')
+            len = 4;
         else if(row[1] == "WORD")
             len = 3;
         else if(row[1] == "RESW")
