@@ -2,7 +2,7 @@
 #include "tables.cpp"
 
 using namespace std;
-
+int SIZE = 0, STADR = 0;
 void pass1()
 {
     load_tables();
@@ -13,7 +13,6 @@ void pass1()
 
     vector<string> row; 
     string line;
-    int SIZE=0;
     string block = "DEFAULT";
     int blkid = 0;
     cout<<endl<<"Pass 1: Intermediate File"<<endl<<endl;
@@ -22,7 +21,7 @@ void pass1()
         row = tokenize(line);
         if(row[1]=="START")
         { 
-            BLOCKS[block].LOCCTR = BLOCKS[block].startAddress = str2int(row[2]);
+            STADR = BLOCKS[block].LOCCTR = BLOCKS[block].startAddress = str2int(row[2]);
             cout<<hex<<BLOCKS[block].LOCCTR<<"\t"<<BLOCKS[block].number<<"\t"<<line<<endl;
             fout<<BLOCKS[block].LOCCTR<<"\t"<<BLOCKS[block].number<<"\t"<<line<<endl; 
             continue;
@@ -32,7 +31,9 @@ void pass1()
         { 
             SIZE+=BLOCKS[block].LOCCTR;
             cout<<hex<<BLOCKS[block].LOCCTR<<"\t"<<BLOCKS[block].number<<"\t"<<line<<endl;
-            fout<<BLOCKS[block].LOCCTR<<"\t"<<BLOCKS[block].number<<"\t"<<line<<endl;  
+            fout<<BLOCKS[block].LOCCTR<<"\t"<<BLOCKS[block].number<<"\t"<<line<<endl;
+            fin.close();
+            fout.close();  
             break;
         }
 
@@ -151,7 +152,9 @@ void pass1()
     }
 }
 
+/*
 int main()                        // Uncomment these to run pass1 seperately
 {                                   // Comment this main function to include in pass2
     pass1();
 }
+*/
