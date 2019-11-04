@@ -48,3 +48,11 @@ vector<string> stcut(string temp, char c)	// function to tokenize string with "\
         row.push_back(word);
     return row;
 } 
+
+int strhex2int(string s)
+{
+    char cstr[s.size() + 1];
+	s.copy(cstr, s.size() + 1);
+	cstr[s.size()] = '\0';
+    return strtoul(cstr,NULL,16);
+}
