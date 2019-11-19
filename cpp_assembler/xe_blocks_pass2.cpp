@@ -35,21 +35,56 @@ void pass2()
         string op;
         int OPCODE, XBPE = 0, DISPL = 0;
         stringstream INSTR;
+        int fmt=0;
         if(stcut(row[3], '+').size() == 2)
-            op = stcut(row[3], '+')[1];
+            {   op = stcut(row[3], '+')[1];
+                fmt=4;  } 
         else
             op = row[3];
         
         if(OPTAB[op].exists=='y')
             OPCODE = strhex2int(OPTAB[op].opcode);
-            cout<<OPCODE<<" "<<OPTAB[op].opcode<<endl;
+            //cout<<OPCODE<<" "<<OPTAB[op].opcode<<endl;
         
         if(row.size() == 5)
         {
             vector<string> operand = stcut(row[4], ',');
+
+            if(OPTAB[op].format==2)
+            {
+                if(operand.size() == 1)
+                    cout<<OPCODE<<REGTAB[operand[0]].num<<endl;
+                else if(operand.size() == 2)
+                    cout<<OPCODE<<REGTAB[operand[0]].num<<REGTAB[operand[1]].num<<endl;
+                continue;
+            }
+
+            if(fmt == 4)
+            {
+                if(operand.size() == 1)
+                {
+                    OPCODE += 3;
+                    XBPE = 1;
+                    DISPL = SYMTAB[operand[0]].address;
+                    cout<<setw(2)<<OPCODE<<setw(1)<<XBPE<<setw(5)<<DISPL<<endl;
+                    continue;
+                }
+            }
+
             if(operand.size() == 1)
             {
+                if(operand[0][0] == '#');
+                {
+                    cout<<"Immdeiate"<<operand[0][0]<<endl;
+                    OPCODE += 1;
+                    XBPE = 0;
+                    vector<string> im_operand = stcut(operand[0], '#');
+                    DISPL = str2int(im_operand[0]);
+                    cout<<setw(2)<<OPCODE<<setw(1)<<XBPE<<setw(3)<<im_operand[0]<<endl;
+                }
+
                 if(SYMTAB[operand[0]].exists=='y')
+                {
                     OPCODE += 3;
                     DISPL = SYMTAB[operand[0]].address - ( str2int(row[0]) + OPTAB[row[3]].format );
                     if(DISPL<2048 and DISPL>-2048)   
@@ -58,11 +93,10 @@ void pass2()
                         XBPE = 4;
                     else
                         cout<<"Memory out of range";
+                }
+                cout<<setw(2)<<OPCODE<<setw(1)<<XBPE<<setw(3)<<DISPL<<endl;
             }
         }
-        cout<<setw(2)<<OPCODE<<setw(1)<<XBPE<<setw(3)<<DISPL<<endl;
-        
-
     }
 }
 
