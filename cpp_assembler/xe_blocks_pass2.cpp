@@ -73,14 +73,16 @@ void pass2()
 
             if(operand.size() == 1)
             {
-                if(operand[0][0] == '#');
+                string hash(1,operand[0][0]);
+                if(hashcmp(hash))
                 {
-                    cout<<"Immdeiate"<<operand[0][0]<<endl;
                     OPCODE += 1;
                     XBPE = 0;
                     vector<string> im_operand = stcut(operand[0], '#');
-                    DISPL = str2int(im_operand[0]);
-                    cout<<setw(2)<<OPCODE<<setw(1)<<XBPE<<setw(3)<<im_operand[0]<<endl;
+                    cout<<im_operand[0]<<endl;
+                    DISPL = str2int(im_operand[1]);
+                    //cout<<setw(2)<<OPCODE<<setw(1)<<XBPE<<setw(3)<<DISPL<<endl;
+                    continue;
                 }
 
                 if(SYMTAB[operand[0]].exists=='y')

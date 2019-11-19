@@ -56,3 +56,27 @@ int strhex2int(string s)
 	cstr[s.size()] = '\0';
     return strtoul(cstr,NULL,16);
 }
+
+bool str2strcmp(string s1, string s2)
+{
+    char cstr1[s1.size() + 1];
+	s1.copy(cstr1, s1.size() + 1);
+	cstr1[s1.size()] = '\0';
+
+    char cstr2[s2.size() + 1];
+	s2.copy(cstr2, s2.size() + 1);
+	cstr2[s2.size()] = '\0';
+
+    if(strcmp(cstr1,cstr2))
+        return false;
+    else
+        return true;
+}
+
+bool hashcmp(string s1)
+{
+    if(s1 == "#")
+        return true;
+    else
+        return false;
+}

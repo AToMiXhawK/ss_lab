@@ -4,7 +4,8 @@ using namespace std;
 
 int main()
 {
-    stringstream str;
-    cout<<stringHexToInt("A");
+    if(hashcmp("a"))
+        printf("Hello");
+    
 } 
 
