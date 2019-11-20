@@ -26,6 +26,30 @@ void pass1()
             continue;
         }
 
+        else if(row[1]=="EQU")
+        { 
+            if(row[0] != "\0")
+            {
+                if(SYMTAB.find(row[0])==SYMTAB.end())
+                {
+                    if(row[2] == "\0")
+                    { cout<<"\nInvalid Usage"<<endl; break; } 
+
+                    SYMTAB[row[0]].address = str2int(row[2]);
+                    SYMTAB[row[0]].name = row[0];
+                    SYMTAB[row[0]].exists = 'y';
+                    SYMTAB[row[0]].is_equ = true;
+                    cout<<hex<<LOCCTR<<"\t"<<line<<endl;
+                    fout<<LOCCTR<<"\t"<<line<<endl; 
+                }
+                else
+                { cout<<"\nDuplicate Symbol"<<endl; break; }
+            }
+            else
+            { cout<<"\nInvalid Usage"<<endl; break; } 
+            continue;
+        }
+
         else if(row[1]=="END")
         { 
             SIZE=LOCCTR-START;
@@ -51,8 +75,6 @@ void pass1()
             OPTAB[row[1]].format>2?len=2:len=1;
         else if(row[1] == "DB")
             len = 1;
-        else if(row[1] == "EQU")
-            len = 0;
         else
             { cout<<"Error: Invalid Opcode "<<row[1]<<endl; break; }
 

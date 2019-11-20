@@ -18,13 +18,13 @@ struct struct_opcode{
 struct struct_label{
      int address;
      string name;
-     int relative;
+     bool is_equ;;
      char exists;
      struct_label(){
        name="undefined";
        address=0;
        exists='n';
-       relative = 0;
+       is_equ = false;
      }
 };
 
