@@ -76,22 +76,22 @@ void load_REGTAB(){
   REGTAB["R9"].num='9';
   REGTAB["R9"].exists='y';
 
-  REGTAB["R10"].num='A';
+  REGTAB["R10"].num='a';
   REGTAB["R10"].exists='y';
 
-  REGTAB["R11"].num='B';
+  REGTAB["R11"].num='b';
   REGTAB["R11"].exists='y';
 
-  REGTAB["R12"].num='C';
+  REGTAB["R12"].num='c';
   REGTAB["R12"].exists='y';
 
-  REGTAB["R13"].num='D';
+  REGTAB["R13"].num='d';
   REGTAB["R13"].exists='y';
 
-  REGTAB["R14"].num='E';
+  REGTAB["R14"].num='e';
   REGTAB["R14"].exists='y';
 
-  REGTAB["R15"].num='F';
+  REGTAB["R15"].num='f';
   REGTAB["R15"].exists='y';
 }
 
@@ -137,27 +137,27 @@ void load_OPTAB(){
   OPTAB["RET"].format=1;
   OPTAB["RET"].exists='y';
 
-  OPTAB["LD"].opcode="A";
+  OPTAB["LD"].opcode="a";
   OPTAB["LD"].format=4;
   OPTAB["LD"].exists='y';
 
-  OPTAB["ST"].opcode="B";
+  OPTAB["ST"].opcode="b";
   OPTAB["ST"].format=4;
   OPTAB["ST"].exists='y';
 
-  OPTAB["LDI"].opcode="C";
+  OPTAB["LDI"].opcode="c";
   OPTAB["LDI"].format=4;
   OPTAB["LDI"].exists='y';
 
-  OPTAB["PUSH"].opcode="D";
+  OPTAB["PUSH"].opcode="d";
   OPTAB["PUSH"].format=2;
   OPTAB["PUSH"].exists='y';
 
-  OPTAB["POP"].opcode="E";
+  OPTAB["POP"].opcode="e";
   OPTAB["POP"].format=2;
   OPTAB["POP"].exists='y';
 
-  OPTAB["HLT"].opcode="F";
+  OPTAB["HLT"].opcode="f";
   OPTAB["HLT"].format=1;
   OPTAB["HLT"].exists='y';
 
