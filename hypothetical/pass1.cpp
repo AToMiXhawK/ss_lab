@@ -3,7 +3,7 @@
 
 using namespace std;
 int SIZE = 0, STADR = 0;
-void pass1()
+int pass1()
 {
     load_tables();
     ifstream fin;
@@ -92,11 +92,13 @@ void pass1()
     {
         cout<<hex<<i->first<<"\t"<<i->second.address<<endl;
     }
-
+    return SIZE;
 }
 
-int main()
-{
-    pass1();
+/*
+int main()                           // Uncomment these to run pass1 seperately
+{                                   // Comment this main function to include in pass2
+    int pgm_size = pass1();
     return 0;
 }
+*/
