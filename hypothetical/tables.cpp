@@ -19,12 +19,10 @@ struct struct_label{
      int address;
      string name;
      int relative;
-     int blockNumber;
      char exists;
      struct_label(){
        name="undefined";
        address=0;
-       blockNumber = 0;
        exists='n';
        relative = 0;
      }
@@ -78,22 +76,22 @@ void load_REGTAB(){
   REGTAB["R9"].num='9';
   REGTAB["R9"].exists='y';
 
-  REGTAB["R10"].num='10';
+  REGTAB["R10"].num='A';
   REGTAB["R10"].exists='y';
 
-  REGTAB["R11"].num='11';
+  REGTAB["R11"].num='B';
   REGTAB["R11"].exists='y';
 
-  REGTAB["R12"].num='12';
+  REGTAB["R12"].num='C';
   REGTAB["R12"].exists='y';
 
-  REGTAB["R13"].num='13';
+  REGTAB["R13"].num='D';
   REGTAB["R13"].exists='y';
 
-  REGTAB["R14"].num='14';
+  REGTAB["R14"].num='E';
   REGTAB["R14"].exists='y';
 
-  REGTAB["R15"].num='15';
+  REGTAB["R15"].num='F';
   REGTAB["R15"].exists='y';
 }
 
